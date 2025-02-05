@@ -4,26 +4,23 @@ public:
     {
         if(s1.length() != s2.length())     return false;
 
+        int cnt = 0;
+
+        unordered_map<char, int> mp1;
+        unordered_map<char, int> mp2;
+        for(auto ch:s1 ) mp1[ch]++;
+
+        for(auto ch:s2 ) mp2[ch]++;
+
+        for(auto ch:s1 )
+            if(mp1[ch] != mp2[ch]) return false;
+
         for(int i=0; i<s1.length(); i++)
         {
-            for(int j=0; j<s1.length(); j++)
-            {
-                swap(s1[i], s1[j]);
-                if(s1 == s2) return true;
-                swap(s1[i], s1[j]);
-            }
+            if(s1[i] != s2[i]) cnt++;
+            if(cnt > 2) return false;
         }
-
-        for(int i=0; i<s2.length(); i++)
-        {
-            for(int j=0; j<s2.length(); j++)
-            {
-                swap(s2[i], s2[j]);
-                if(s1 == s2) return true;
-                swap(s2[i], s2[j]);
-            }
-        }
-
+        if(cnt == 0 || cnt == 2) return true;
         return false;
     }
 };
