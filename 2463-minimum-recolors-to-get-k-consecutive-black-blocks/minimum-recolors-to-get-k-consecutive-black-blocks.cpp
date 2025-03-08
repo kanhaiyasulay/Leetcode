@@ -2,23 +2,18 @@ class Solution {
 public:
     int minimumRecolors(string blocks, int k) 
     {
-        int mini = k, n = blocks.size(), l = 0, r = 0;
+        int mini = k, n = blocks.size(), cntBlack = 0;
 
-        int cntBlack = 0;
-        while(r < n)
+        unordered_map<int, int> mp;
+
+        mp[-1] = 0;
+        for(int i=0; i<n; i++)
         {
-            if(blocks[r] == 'B') cntBlack++;
-            if(r-l+1 > k)
-            {
-                if(blocks[l] == 'B') cntBlack--;
-                l++;
-            }
+            if(blocks[i] == 'B') cntBlack++;
 
-            if(r-l+1 == k) 
-            {
-                mini = min(mini, r-l+1 - cntBlack);
-            }
-            r++;
+            mp[i] = cntBlack;
+
+            if(i-k+1 >= 0) mini = min(mini, k-(cntBlack-mp[i-k]));
         }
 
         return mini;
