@@ -11,39 +11,39 @@
  */
 class Solution {
 public:
+    void dfs(TreeNode* root, unordered_map<int, vector<int>>& mp, int lvl)
+    {
+        if(!root) return;
+        mp[lvl].push_back(root->val);
+
+        dfs(root->left, mp, lvl+1);
+        dfs(root->right, mp, lvl+1);
+    }
+
     bool isEvenOddTree(TreeNode* root) 
     {
         int lvl = 0;
-        queue<TreeNode*> q;
-        q.push(root);
+        unordered_map<int, vector<int>> mp;
+        dfs(root, mp, lvl);
 
-        while(!q.empty())
+        for(auto it:mp )
         {
-            int size = q.size();
-            int maxVal = 0, minVal = INT_MAX;
-
-            for(int i=0; i<size; i++)
+            int minVal = INT_MAX, maxVal = INT_MIN;
+            for(auto a:it.second )
             {
-                TreeNode* front = q.front();
-                q.pop();
-
-                if(lvl%2 == 0) 
+                if(it.first%2 == 0)
                 {
-                    if((maxVal >= front->val) || ((front->val) % 2 == 0)) return false;
-                    maxVal = max(maxVal, front->val);
-                    minVal = min(minVal, front->val);
+                    if(maxVal >= a || a%2 == 0) return false;
+                    maxVal = max(maxVal, a);
+                    minVal = min(minVal, a);
                 }
                 else
                 {
-                    if((minVal <= front->val) || ((front->val) % 2 == 1)) return false;
-                    maxVal = max(maxVal, front->val);
-                    minVal = min(minVal, front->val);
+                    if(minVal <= a || a%2 == 1) return false;
+                    maxVal = max(maxVal, a);
+                    minVal = min(minVal, a);
                 }
-
-                if(front->left) q.push(front->left);
-                if(front->right) q.push(front->right);
             }
-            lvl++;
         }
 
         return true;
