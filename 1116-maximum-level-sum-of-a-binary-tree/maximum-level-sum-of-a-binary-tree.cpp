@@ -10,39 +10,30 @@
  * };
  */
 class Solution {
-    void maxLvl(TreeNode* root, int& ans)
+    void maxRow(TreeNode* root, map<int,int>& mp, int lvl)
     {
-        int maxi = root->val, lvl = 1;
-        queue<TreeNode*> q;
-        q.push(root);
+        if(!root) return;
 
-        while(!q.empty())
-        {
-            int size = q.size();
-            int sum = 0;
-
-            for(int i=0; i<size; i++)
-            {
-                TreeNode* front = q.front();
-                q.pop();
-                sum += front->val;
-
-                if(front->left) q.push(front->left);
-                if(front->right) q.push(front->right);
-            }
-            if(sum > maxi)
-            {
-                maxi = sum;
-                ans = lvl;
-            }
-            lvl++;
-        }
+        mp[lvl] += root->val;
+        maxRow(root->left, mp, lvl+1);
+        maxRow(root->right, mp, lvl+1);
     }
 public:
     int maxLevelSum(TreeNode* root) 
     {
-        int ans = 1;
-        maxLvl(root, ans);
-        return ans;
+        int lvl = 1;
+        map<int, int> mp;
+        maxRow(root, mp, lvl);
+        int sum = root->val;
+        for(auto it:mp )
+        {
+            if(it.second > sum)
+            {
+                lvl = it.first;
+                sum = it.second;
+            }
+        }
+
+        return lvl;
     }
 };
