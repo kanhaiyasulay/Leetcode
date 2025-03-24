@@ -1,40 +1,27 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
-    void secondLoop(TreeNode* root, int& sum, int& n)
-    {
-        if(!root) return;
-
-        sum += root->val;
-        n++;
-
-        secondLoop(root->left, sum, n);
-        secondLoop(root->right, sum, n);
+    pair<int, int> subtreeSumAndCount(TreeNode* root) {
+        if (!root) return {0, 0};  // {sum, count}
+        
+        auto left = subtreeSumAndCount(root->left);
+        auto right = subtreeSumAndCount(root->right);
+        
+        int sum = root->val + left.first + right.first;
+        int count = 1 + left.second + right.second;
+        
+        return {sum, count};
     }
-    void firstLoop(TreeNode* root, int& cnt)
-    {
-        if(!root) return;
-        int sum = 0, n = 0;
-        secondLoop(root, sum, n);
-        if(sum/n == root->val) cnt++;
 
-        firstLoop(root->left, cnt);
-        firstLoop(root->right, cnt);
+    int firstLoop(TreeNode* root) {
+        if (!root) return 0;
+
+        auto [sum, count] = subtreeSumAndCount(root);
+        int match = (sum / count == root->val) ? 1 : 0;
+
+        return match + firstLoop(root->left) + firstLoop(root->right);
     }
-    int averageOfSubtree(TreeNode* root) 
-    {
-        int cnt = 0;
-        firstLoop(root, cnt);
-        return cnt;
+
+    int averageOfSubtree(TreeNode* root) {
+        return firstLoop(root);
     }
 };
