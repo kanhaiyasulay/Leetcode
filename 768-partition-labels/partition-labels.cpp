@@ -4,26 +4,21 @@ public:
     {
         int n = s.length();
         vector<int> result;
+        unordered_map<char, int> occ;
 
+        for(int i=0; i<n; i++) 
+            occ[s[i]] = i;
+        
         for(int i=0; i<n; i++)
         {
             char ch = s[i];
-            int lastOcc = i;
+            int lastOcc = occ[ch];
 
-            for(int j=i; j<n; j++)
+            for(int j=i; j<=lastOcc; j++)
             {
-                if(s[j] == ch) lastOcc = j;
-            }
-
-            for(int k=i+1; k<=lastOcc; k++)
-            {
-                char currCh = s[k];
-                int newLastOcc = k;
-                for(int j=k; j<n; j++)
-                {
-                    if(s[j] == currCh) newLastOcc = j;
-                }
-                if(newLastOcc > lastOcc) lastOcc = newLastOcc;
+                char nextCh = s[j];
+                int newLastOcc = occ[nextCh];
+                lastOcc = newLastOcc > lastOcc ? newLastOcc : lastOcc;
             }
             result.push_back(lastOcc-i+1);
             i = lastOcc;
