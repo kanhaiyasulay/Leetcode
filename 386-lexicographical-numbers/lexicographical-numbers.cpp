@@ -2,13 +2,12 @@ class Solution {
 public:
     vector<int> lexicalOrder(int n) 
     {
-        vector<string> srr;
+        set<string> srr;
         for(int i=1; i<=n; i++)
         {
             string temp = to_string(i);
-            srr.push_back(temp);
+            srr.insert(temp);
         }
-        sort(srr.begin(), srr.end());
         vector<int> ans;
         for(auto it:srr ) ans.push_back(stoi(it));
 
