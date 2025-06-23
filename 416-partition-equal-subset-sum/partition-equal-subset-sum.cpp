@@ -22,24 +22,26 @@ public:
 
         int reqSum = total/2;
 
-        vector<vector<bool>> dp(n, vector<bool>(reqSum+1, false));
-        for(int i=0; i<n; i++) dp[i][0] = true;
+        vector<bool> prev(reqSum+1, false);
+        vector<bool> temp(reqSum+1, false);
+        prev[0] = true;
 
-        if(nums[0] <= reqSum) dp[0][nums[0]] = true;
+        if(nums[0] <= reqSum) prev[nums[0]] = true;
 
         for(int i=1; i<n; i++)
         {
             for(int sum=0; sum<=reqSum; sum++)
             {
-                bool exclusion = dp[i-1][sum];
+                bool exclusion = prev[sum];
                 bool inclusion = false;
                 if(nums[i] <= sum)
-                    inclusion = dp[i-1][sum-nums[i]];
+                    inclusion = prev[sum-nums[i]];
 
-                dp[i][sum] = (inclusion || exclusion);
+                temp[sum] = (inclusion || exclusion);
             }
+            prev = temp;
         }
 
-        return dp[n-1][reqSum];
+        return prev.back();
     }
 };
