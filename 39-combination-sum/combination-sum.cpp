@@ -1,24 +1,28 @@
 class Solution {
 public:
-    void subs(vector<vector<int>>& ans, vector<int>& candidates, int target, int idx, int sum, vector<int>& temp)
+    void backtrack(vector<int>& candidates, vector<vector<int>>& ans, vector<int>& temp, int target, int idx)
     {
-        if(sum >= target)
+        if(target == 0)
         {
-            if(sum == target) ans.push_back(temp);
+            ans.push_back(temp);
             return;
         }
-        for(int i=idx; i<candidates.size(); i++)
+        if(idx < 0) return;
+
+        for(int i=idx; i>=0; i--)
         {
+            if(candidates[i] > target) continue;
             temp.push_back(candidates[i]);
-            subs(ans, candidates, target, i, sum+candidates[i], temp);
+            backtrack(candidates, ans, temp, target-candidates[i], i);
             temp.pop_back();
         }
     }
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) 
     {
+        sort(candidates.begin(), candidates.end());
         vector<vector<int>> ans;
         vector<int> temp;
-        subs(ans, candidates, target, 0, 0, temp);
+        backtrack(candidates, ans, temp, target, candidates.size()-1);
         return ans;
     }
 };
