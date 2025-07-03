@@ -1,0 +1,1 @@
+<h2>find-the-k-th-character-in-string-game-i Notes</h2><hr>[ Time taken: 5 m 0 s ]
