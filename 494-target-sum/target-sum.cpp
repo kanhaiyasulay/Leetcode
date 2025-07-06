@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int backtrack(vector<int>& nums, int target, int idx)
+    int backtrack(vector<int>& nums, int target, int idx, vector<vector<int>>& dp)
     {
         if(idx == 0)
         {
@@ -9,13 +9,14 @@ public:
             if(target == nums[0]) return 1;
             return 0;
         }
+        if(dp[idx][target] != -1) return dp[idx][target];
         
-        int exclusion = backtrack(nums, target, idx-1);
+        int exclusion = backtrack(nums, target, idx-1, dp);
         int inclusion = 0;
         if(target >= nums[idx])
-            inclusion = backtrack(nums, target-nums[idx], idx-1);
+            inclusion = backtrack(nums, target-nums[idx], idx-1, dp);
         
-        return (inclusion + exclusion);
+        return dp[idx][target] = (inclusion + exclusion);
     }
     int findTargetSumWays(vector<int>& nums, int target) 
     {
@@ -24,6 +25,7 @@ public:
         // VV IMP
         if (total < abs(target) || (target + total) % 2 != 0) return 0;
 
-        return backtrack(nums, newTarget, nums.size()-1);
+        vector<vector<int>> dp(nums.size(), vector<int>(newTarget+1, -1));
+        return backtrack(nums, newTarget, nums.size()-1, dp);
     }
 };
