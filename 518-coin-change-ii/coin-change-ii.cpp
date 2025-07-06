@@ -1,3 +1,4 @@
+#define ll long long
 class Solution {
 public:
     int backtrack(vector<int>& coins, int amount, int idx, vector<vector<int>>& dp)
@@ -19,7 +20,27 @@ public:
     int change(int amount, vector<int>& coins) 
     {
         int n = coins.size();
-        vector<vector<int>> dp(n, vector<int>(amount+1, -1));
-        return backtrack(coins, amount, n-1, dp);
+        vector<vector<unsigned ll>> dp(n, vector<unsigned ll>(amount+1, 0));
+
+        for(int i=0; i<=amount; i++)
+        {
+            if(i%coins[0] == 0) dp[0][i] = 1;
+            else dp[0][i] = 0;
+        }
+
+        for(int i=1; i<n; i++)
+        {
+            for(int amt=0; amt<=amount; amt++)
+            {
+                unsigned ll exclusion = dp[i-1][amt];
+                unsigned ll inclusion = 0;
+                if(amt >= coins[i])
+                    inclusion = dp[i][amt-coins[i]];
+                
+                dp[i][amt] = inclusion + exclusion;
+            }
+        }
+
+        return static_cast<int>(dp[n-1][amount]);
     }
 };
