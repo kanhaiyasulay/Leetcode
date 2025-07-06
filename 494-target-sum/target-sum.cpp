@@ -25,7 +25,25 @@ public:
         // VV IMP
         if (total < abs(target) || (target + total) % 2 != 0) return 0;
 
-        vector<vector<int>> dp(nums.size(), vector<int>(newTarget+1, -1));
-        return backtrack(nums, newTarget, nums.size()-1, dp);
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(newTarget+1, 0));
+
+        for(int i=0; i<n; i++) dp[i][0] = 1;
+        if(newTarget >= nums[0]) dp[0][nums[0]] += 1;
+
+        for(int i=1; i<n; i++)
+        {
+            for(int tar=0; tar<=newTarget; tar++)
+            {
+                int exclusion = dp[i-1][tar];
+                int inclusion = 0;
+                if(tar >= nums[i])
+                    inclusion = dp[i-1][tar-nums[i]];
+                
+                dp[i][tar] = inclusion + exclusion;
+            }
+        }
+
+        return dp[n-1][newTarget];
     }
 };
