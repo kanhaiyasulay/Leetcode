@@ -16,19 +16,22 @@ public:
             return 0;
 
         int res = n;
-        int left = 0;
+        int left = 0, right = 0;
 
         // Step 3: Use sliding window
-        for (int right = 0; right < n; ++right) {
+        while (right < n)
+        {
             count[s[right]]--;
 
             // Step 4: Check if the remaining string (outside window) is valid
-            while (count['Q'] <= required && count['W'] <= required &&
-                   count['E'] <= required && count['R'] <= required) {
+            while (count['Q'] <= required && count['W'] <= required && 
+                count['E'] <= required && count['R'] <= required) 
+            {
                 res = min(res, right - left + 1);
                 count[s[left]]++;
                 left++;
             }
+            right++;
         }
 
         return res;
