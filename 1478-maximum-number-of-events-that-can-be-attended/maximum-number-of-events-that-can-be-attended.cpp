@@ -1,20 +1,43 @@
 class Solution {
 public:
-        int maxEvents(vector<vector<int>>& A) {
-        priority_queue <int, vector<int>, greater<int>> pq;
-        sort(A.begin(), A.end());
-        int i = 0, res = 0, d = 0, n = A.size();
-        while (pq.size() > 0 || i < n) {
-            if (pq.size() == 0)
-                d = A[i][0];
-            while (i < n && A[i][0] <= d)
-                pq.push(A[i++][1]);
-            pq.pop();
-            ++res, ++d;
-            while (pq.size() > 0 && pq.top() < d)
-                pq.pop();
+    int maxEvents(vector<vector<int>>& events) 
+    {
+        int n = events.size();
 
+        sort(events.begin(), events.end());
+
+        priority_queue<int, vector<int>, greater<int>> pq; 
+        int day   = events[0][0]; 
+        int i     = 0;
+        int count = 0; 
+
+        while(!pq.empty() || i < n) 
+        {    
+            // skip those days when there are no events
+            if(pq.empty()) 
+                day = events[i][0];
+
+            while(i < n && events[i][0] == day) 
+            {
+                pq.push(events[i][1]);
+                i++;
+            }
+
+            if(!pq.empty()) 
+            {
+                pq.pop(); //1 event attended on this day
+                count++; //counting the result
+            }
+
+            day++;
+
+            //skip those events whose endDay < day
+            while(!pq.empty() && pq.top() < day)
+            {
+                pq.pop();
+            }
         }
-        return res;
+
+        return count;
     }
 };
