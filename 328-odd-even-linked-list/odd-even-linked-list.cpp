@@ -15,19 +15,40 @@ public:
         if(!head) return NULL;
         if(!head->next || !head->next->next) return head;
 
-        ListNode* odd = head;
-        ListNode* even = head->next;
-        ListNode* firstEven = even;
+        vector<ListNode*> odd;
+        vector<ListNode*> even;
 
-        while(even && even->next)
+        ListNode* curr = head;
+        bool isOdd = true;
+        while(curr)
         {
-            odd->next = even->next;
-            even->next = even->next->next;
-            odd = odd->next;
-            odd->next = firstEven;
-            even = even->next;
+            if(isOdd)
+            {
+                odd.push_back(curr);
+                isOdd = false;
+            }
+            else
+            {
+                even.push_back(curr);
+                isOdd = true;
+            }
+            curr = curr->next;
         }
 
-        return head;
+        ListNode* dummy = new ListNode(-1);
+        head = dummy;
+
+        for(int i=0; i<odd.size(); i++)
+        {
+            head->next = odd[i];
+            head = head->next;
+        }
+        for(int i=0; i<even.size(); i++)
+        {
+            head->next = even[i];
+            head = head->next;
+        }
+        head->next = NULL;
+        return dummy->next;
     }
 };
