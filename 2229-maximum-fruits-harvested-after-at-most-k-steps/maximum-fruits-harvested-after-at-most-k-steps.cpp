@@ -1,14 +1,46 @@
 class Solution {
 public:
-    int maxTotalFruits(vector<vector<int>>& fruits, int pos, int k) {
-    auto l = upper_bound(begin(fruits), end(fruits), vector<int>{pos - k});
-    int sum = 0, max_sum = 0;
-    for (auto r = l; r != end(fruits) && (*r)[0] <= pos + k; ++r) {
-        sum += (*r)[1];
-        while(min(pos - 2 * (*l)[0] + (*r)[0], 2 * (*r)[0] - (*l)[0] - pos) > k)
-            sum -= (*l++)[1];
-        max_sum = max(max_sum, sum);
+    int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
+        int n = fruits.size();
+        vector<int> prefixSum(n);
+        vector<int> indices(n);
+
+        // Build prefix sum and extract indices
+        for (int i = 0; i < n; i++) {
+            indices[i]   = fruits[i][0];
+            prefixSum[i] = fruits[i][1] + (i > 0 ? prefixSum[i - 1] : 0);
+        }
+
+        int maxFrutis = 0;
+
+        for (int d = 0; d <= k / 2; d++) {
+            // Move
+            int remain = k - 2 * d;
+            int i   = startPos - d;
+            int j  = startPos + remain;
+        
+        // instead of using STL you can write your own custom binary search for lower_bound and upper_bound
+            int left  = lower_bound(indices.begin(), indices.end(), i) - indices.begin();
+            int right = upper_bound(indices.begin(), indices.end(), j) - indices.begin() - 1;
+
+            if(left <= right) {
+                int total = prefixSum[right] - (left > 0 ? prefixSum[left - 1] : 0);
+                maxFrutis = max(maxFrutis, total);
+            }
+
+            // Second case: move right x, then left (k - 2x)
+            i  = startPos - remain;
+            j  = startPos + d;
+            
+            left  = lower_bound(indices.begin(), indices.end(), i) - indices.begin();
+            right = upper_bound(indices.begin(), indices.end(), j) - indices.begin() - 1;
+
+            if(left <= right) {
+                int total = prefixSum[right] - (left > 0 ? prefixSum[left - 1] : 0);
+                maxFrutis = max(maxFrutis, total);
+            }
+        }
+
+        return maxFrutis;
     }
-    return max_sum;
-}
 };
