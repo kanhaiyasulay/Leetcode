@@ -16,7 +16,7 @@ public:
             mini = max(mini, dp[idx][currentSum]);
             return;
         }
-        if(idx >= 0 && currentSum <= target && dp[idx][currentSum] == -1) dp[idx][currentSum] = mini;
+        if(currentSum <= target) dp[idx][currentSum] = mini;
 
         // include current stone
         backtrack(stones, target, idx - 1, currentSum + stones[idx], dp);
