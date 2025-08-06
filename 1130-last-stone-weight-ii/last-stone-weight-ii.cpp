@@ -5,11 +5,10 @@ public:
     void backtrack(vector<int>& stones, int target, int idx, int currentSum, vector<vector<int>>& dp) 
     {
         if(currentSum > target) return;
-        if (idx < 0) {
+        if (idx < 0) 
+        {
             if (currentSum <= target)
-            {
                 mini = max(mini, currentSum); // track the best sum ≤ target
-            }
             return;
         }
         if(dp[idx][currentSum] != -1)
@@ -17,7 +16,7 @@ public:
             mini = max(mini, dp[idx][currentSum]);
             return;
         }
-        if(idx >= 0 && currentSum <= target) dp[idx][currentSum] = mini;
+        if(idx >= 0 && currentSum <= target && dp[idx][currentSum] == -1) dp[idx][currentSum] = mini;
 
         // include current stone
         backtrack(stones, target, idx - 1, currentSum + stones[idx], dp);
