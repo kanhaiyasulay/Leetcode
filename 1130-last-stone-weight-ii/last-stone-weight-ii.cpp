@@ -2,26 +2,21 @@ class Solution {
 public:
     int mini = 0; // closest sum to target
 
-    void backtrack(vector<int>& stones, int target, int idx, int currentSum, vector<vector<int>>& dp) 
+    int backtrack(vector<int>& stones, int target, int idx, int currentSum, vector<vector<int>>& dp) 
     {
-        if(currentSum > target) return;
+        if(currentSum > target) return mini;
         if (idx < 0) 
         {
             if (currentSum <= target)
                 mini = max(mini, currentSum); // track the best sum ≤ target
-            return;
+            return mini;
         }
-        if(dp[idx][currentSum] != -1)
-        {
-            mini = max(mini, dp[idx][currentSum]);
-            return;
-        }
-        if(currentSum <= target) dp[idx][currentSum] = mini;
+        if(dp[idx][currentSum] != -1) return dp[idx][currentSum];
 
-        // include current stone
-        backtrack(stones, target, idx - 1, currentSum + stones[idx], dp);
-        // exclude current stone
-        backtrack(stones, target, idx - 1, currentSum, dp);
+        int inclusion = backtrack(stones, target, idx - 1, currentSum + stones[idx], dp);
+        int exclusion = backtrack(stones, target, idx - 1, currentSum, dp);
+
+        return dp[idx][currentSum] = mini;
     }
 
     int lastStoneWeightII(vector<int>& stones) {
