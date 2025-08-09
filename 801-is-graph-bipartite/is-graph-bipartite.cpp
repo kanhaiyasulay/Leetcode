@@ -1,16 +1,28 @@
-class Solution {
+ class Solution {
 public:
-    bool dfs(vector<vector<int>>& graph, vector<int>& color, int src)
+    bool bfs(vector<vector<int>>& graph, vector<int>& color, int src)
     {
-        for(auto it:graph[src] )
+        queue<pair<int, int>> q;
+        q.push({src, 1});
+        color[src] = 1;
+
+        while(!q.empty())
         {
-            if(color[it] == -1)
+            int node = q.front().first;
+            int clr = q.front().second;
+            q.pop();
+
+            for(auto it:graph[node] )
             {
-                color[it] = !color[src];
-                if(!dfs(graph, color, it)) return false;
+                if(color[it] == -1)
+                {
+                    color[it] = !clr;
+                    q.push({it, !clr});
+                }
+                if(color[it] == clr) return false;
             }
-            if(color[it] == color[src]) return false;
         }
+
         return true;
     }
     bool isBipartite(vector<vector<int>>& graph) 
@@ -21,8 +33,7 @@ public:
         {
             if(color[i] == -1)
             {
-                color[i] = 1;
-                if(dfs(graph, color, i) == false) return false;
+                if(bfs(graph, color, i) == false) return false;
             }
         }
         return true;
