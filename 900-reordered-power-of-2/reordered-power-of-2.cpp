@@ -1,29 +1,19 @@
 class Solution {
 public:
-    bool permut(string& str, int idx)
+    bool reorderedPowerOf2(int n) 
     {
-        if (idx == str.length()) 
+        unordered_set<string> st;
+        int num = 1;
+        while(num <= 1e9)    
         {
-            if (str[0] == '0') return false;
-            int num = 0;
-            for (auto it : str) 
-            {
-                num = num * 10 + (it - '0');
-            }
-            return (num & (num - 1)) == 0;
+            string s = to_string(num);
+            sort(s.begin(), s.end());
+            st.insert(s);
+            num *= 2;
         }
+        string s = to_string(n);
+        sort(s.begin(), s.end());
 
-        for(int i=idx; i<str.length(); i++)
-        {
-            swap(str[idx], str[i]);
-            if(permut(str, idx+1)) return true;
-            swap(str[idx], str[i]);
-        }
-        return false;
-    }
-    bool reorderedPowerOf2(int n)
-    {
-        string str = to_string(n);
-        return permut(str, 0);
+        return st.find(s) != st.end();
     }
 };
