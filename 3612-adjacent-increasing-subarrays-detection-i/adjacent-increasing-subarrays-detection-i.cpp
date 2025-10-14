@@ -2,35 +2,27 @@ class Solution {
 public:
     bool hasIncreasingSubarrays(vector<int>& nums, int k) 
     {
+        int run = 1, prevRun = 1; // prevRun = 0 because no previous streak yet
         int n = nums.size();
-        int cnt = k*2;
-        for(int i=0; i<n; i++)    
+
+        for(int i = 1; i < n; i++) 
         {
-            if(n < i+(k*2)) return false;
-            cnt = k;
-            bool parity = true;
-
-            for(int j=i+1; j<i+k; j++)
+            if(run >= k*2) return true;
+            if(nums[i] > nums[i - 1]) 
+                run++;
+            else 
             {
-                if(nums[j] <= nums[j-1]) 
-                {
-                    parity = false;
-                    break;
-                }
-            }
+                // If both current and previous streaks are long enough
+                if(run >= k && prevRun >= k)
+                    return true;
 
-            for(int j=i+k+1; j<i+(k*2); j++)
-            {
-                if(nums[j] <= nums[j-1])
-                {
-                    parity = false;
-                    break;
-                }
+                // Update previous run only if current was long enough
+                prevRun = (run >= k ? run : 0);
+                run = 1;
             }
-
-            if(parity) return true;
         }
 
-        return false;
+        // Final check after loop ends
+        return ((run >= k && prevRun >= k) || run >= k*2);
     }
 };
