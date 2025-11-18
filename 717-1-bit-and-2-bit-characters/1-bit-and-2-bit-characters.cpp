@@ -3,27 +3,19 @@ public:
     bool isOneBitCharacter(vector<int>& bits) 
     {
         int n = bits.size();
-        if(n == 1)   return true;
+        if( n == 1) return true;
 
-        int last = bits[0] != 0 ? 1 : -1;
-        bool ans = true;
-        for(int i=1; i<n; i++)
+        bool ans = false;
+        for(int i=0; i<n; i++)
         {
-            int curr = bits[i];
-            if(last == 1 && curr == 0) 
+            if(bits[i] == 1)
             {
                 ans = false;
-                last = -1;
+                i++;
             }
-            else if(last == 1 && curr == 1) 
-            {
-                ans = false;
-                last = -1;
-            }
-            else if(last == -1) 
+            else
             {
                 ans = true;
-                last = curr != 0 ? curr : -1;
             }
         }
 
