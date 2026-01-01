@@ -10,25 +10,28 @@
  * };
  */
 class Solution {
-    int height(TreeNode* root, unordered_map<TreeNode*, int>& mp)
+public:
+    int height(TreeNode* root)
     {
         if(!root) return 0;
-
-        int leftH = height(root->left, mp);
-        int rightH = height(root->right, mp);
-
-        mp[root] = leftH + rightH;
-        return max(leftH, rightH) + 1;
+        return max(height(root->left), height(root->right)) + 1;
     }
-public:
+    void diameter(TreeNode* root, int& maxi)
+    {
+        if(!root) return;
+        int leftH = height(root->left);
+        int rightH = height(root->right);
+
+        int tot = leftH + rightH;
+        maxi = max(maxi, tot);
+
+        diameter(root->left, maxi);
+        diameter(root->right, maxi);
+    }
     int diameterOfBinaryTree(TreeNode* root) 
     {
-        unordered_map<TreeNode*, int> mp;
-        height(root, mp);
-
         int maxi = 0;
-        for(auto it:mp ) maxi = max(maxi, it.second);
-
-        return maxi;
+        diameter(root, maxi);
+        return maxi;    
     }
 };
