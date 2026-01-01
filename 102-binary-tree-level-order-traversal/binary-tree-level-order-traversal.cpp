@@ -14,20 +14,24 @@ public:
     vector<vector<int>> levelOrderHelper(TreeNode* root)
     {
         vector<vector<int>> ans;
-        deque<TreeNode*> dq;
-        dq.push_front(root);
-        while(!dq.empty())
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while(!q.empty())
         {
-            int size = dq.size();
+            int size = q.size();
             vector<int> temp;
+
             for(int i=0; i<size; i++)
             {
-                TreeNode* back = dq.back();
-                temp.push_back(back->val);
-                dq.pop_back();
+                TreeNode* front = q.front();
+                q.pop();
 
-                if(back->left) dq.push_front(back->left);
-                if(back->right) dq.push_front(back->right);
+                temp.push_back(front->val);
+
+                if(front->left) q.push(front->left);
+                if(front->right) q.push(front->right);
             }
             ans.push_back(temp);
         }
