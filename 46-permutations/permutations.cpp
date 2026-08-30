@@ -1,31 +1,23 @@
 class Solution {
 public:
-    void backtrack(vector<int>& nums, unordered_map<int, bool>& mp, vector<vector<int>>& ans, vector<int>& temp, int idx)
+    void backtrack(vector<int>& nums, vector<vector<int>>& ans, int idx)
     {
-        if(temp.size() == nums.size()) 
+        if(idx == nums.size())
         {
-            ans.push_back(temp);
+            ans.push_back(nums);
             return;
         }
-        for(int i=0; i<nums.size(); i++)
+        for(int i=idx; i<nums.size(); i++)
         {
-            if(mp[nums[i]]) continue;
-
-            mp[nums[i]] = true;
-            temp.push_back(nums[i]);
-            backtrack(nums, mp, ans, temp, i+1);
-            mp[nums[i]] = false;
-            temp.pop_back();
+            swap(nums[idx], nums[i]);
+            backtrack(nums, ans, idx+1);
+            swap(nums[idx], nums[i]);
         }
     }
     vector<vector<int>> permute(vector<int>& nums) 
     {
-        unordered_map<int, bool> mp;
-        for(auto it:nums ) mp[it] = false;
         vector<vector<int>> ans;
-        vector<int> temp;    
-
-        backtrack(nums, mp, ans, temp, 0);
-        return ans;
+        backtrack(nums, ans, 0);
+        return ans;    
     }
 };
