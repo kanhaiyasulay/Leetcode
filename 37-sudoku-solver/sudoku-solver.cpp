@@ -1,21 +1,32 @@
 class Solution {
-    bool isSafe(vector<vector<char>>& board, char ch, int row, int col)
+public:
+    bool isSafe(char ch, vector<vector<char>>& board, int row, int col)
     {
-        for(int j=0; j<board.size(); j++)
+        // 1. checking for 3X3 metrix
+        int startRow = row-(row%3);
+        int startCol = col - (col%3);
+        for(int i=startRow; i<startRow+3; i++)
         {
-            if(board[row][j] == ch || board[j][col] == ch) 
-                return false;
+            for(int j=startCol; j<startCol+3; j++)
+            {
+                if(board[i][j] == ch) return false;
+            }
         }
 
-        int currRow = row - (row%3), currCol = col - (col%3);
+        // 2. checking for entire row 
+        for(int i=0; i<9; i++)
+        {
+            if(board[row][i] == ch) return false;
+        }
 
-        for(int i=currRow; i<currRow+3; i++)
-            for(int j=currCol; j<currCol+3; j++)
-                if(board[i][j] == ch) return false;
+        // 3. checking for entire col
+        for(int i=0; i<9; i++)  
+        {
+            if(board[i][col] == ch) return false;
+        }
 
         return true;
     }
-public:
     bool backtrack(vector<vector<char>>& board)
     {
         for(int i=0; i<9; i++)
@@ -26,7 +37,7 @@ public:
                 {
                     for(char ch='1'; ch<='9'; ch++)
                     {
-                        if(!isSafe(board, ch, i, j)) continue;
+                        if(!isSafe(ch, board, i, j)) continue;
                         board[i][j] = ch;
                         if(backtrack(board)) return true;
                         board[i][j] = '.';
