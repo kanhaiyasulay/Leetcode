@@ -14,6 +14,17 @@ public:
     {
         int n = nums.size();
         vector<int> dp(n, -1);
-        return backtrack(nums, 0, dp);
+        dp[0] = nums[0];
+
+        for(int i=1; i<n; i++)
+        {
+            int inclusion = nums[i];
+            if(i-2 >= 0) inclusion += dp[i-2];
+            int exclusion = dp[i-1];
+
+            dp[i] = max(inclusion, exclusion);
+        }
+
+        return dp.back();
     }
 };
