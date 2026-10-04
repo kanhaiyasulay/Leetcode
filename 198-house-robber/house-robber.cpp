@@ -1,30 +1,21 @@
 class Solution {
 public:
-    int backtrack(vector<int>& nums, int idx, vector<int>& dp)
-    {
-        if(idx >= nums.size()) return 0;
-        if(dp[idx] != -1) return dp[idx];
-
-        int inclusion = backtrack(nums, idx+2, dp) + nums[idx];
-        int exclusion = backtrack(nums, idx+1, dp);
-
-        return dp[idx] = max(inclusion, exclusion);
-    }
     int rob(vector<int>& nums) 
     {
         int n = nums.size();
-        vector<int> dp(n, -1);
-        dp[0] = nums[0];
 
+        int prev = nums[0];
+        int prev2 = 0;
+        int ans = 0;
         for(int i=1; i<n; i++)
         {
-            int inclusion = nums[i];
-            if(i-2 >= 0) inclusion += dp[i-2];
-            int exclusion = dp[i-1];
+            int inclusion = nums[i] + prev2; 
+            int exclusion = prev;
 
-            dp[i] = max(inclusion, exclusion);
+            int curr = max(inclusion, exclusion);
+            prev2 = prev;
+            prev = curr;
         }
-
-        return dp.back();
+        return prev;
     }
 };
