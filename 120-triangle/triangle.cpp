@@ -1,37 +1,28 @@
 class Solution {
 public:
-    int backtrack(vector<vector<int>>& triangle, vector<vector<int>> &dp, int row, int col)
+    int backtrack(vector<vector<int>>& triangle, int row, int col, vector<vector<int>>& dp)
     {
-        if(row >= triangle.size() || col >= triangle[row].size())  return INT_MAX;
-        if(row == triangle.size()-1) return triangle[row][col];
+        if(row<0 || col>=triangle[row].size() || col<0) return 1e9;
+        if(row==0 && col==0) return triangle[0][0];
         if(dp[row][col] != -1) return dp[row][col];
 
-        int down = triangle[row][col] + backtrack(triangle, dp, row+1, col);
-        int digonal = triangle[row][col] + backtrack(triangle, dp, row+1, col+1);
+        int up = 1e9, upLeft = 1e9;
+        if(row-1>=0 && triangle[row-1].size() > col) up = backtrack(triangle, row-1, col, dp) + triangle[row][col];
+        if(row-1>=0 && col-1>=0) upLeft = backtrack(triangle, row-1, col-1, dp) + triangle[row][col];
 
-        return dp[row][col] = min(down, digonal);
+        return dp[row][col] = min(up, upLeft);
     }
     int minimumTotal(vector<vector<int>>& triangle) 
     {
-        int n = triangle.size();
-        vector<int> prev(n, 0);
-
-        for(int i=0; i<n; i++)
-            prev[i] = triangle[n-1][i];
-        
-        for(int i=n-2; i>=0; i--)
+        int m = triangle.size();
+        int n = triangle[m-1].size();
+        int minAns = INT_MAX;
+        vector<vector<int>> dp(m, vector<int>(n, -1));
+        for(int i=0; i<triangle[m-1].size(); i++)
         {
-            vector<int> temp(n, 0);
-            for(int j=i; j>=0; j--)
-            {
-                int down = triangle[i][j] + prev[j];
-                int digonal = triangle[i][j] + prev[j+1];
-
-                temp[j] = min(down, digonal);
-            }
-            prev = temp;
+            int ans = backtrack(triangle, m-1, i, dp);
+            minAns = min(minAns, ans);
         }
-
-        return prev[0];
+        return minAns;
     }
 };
