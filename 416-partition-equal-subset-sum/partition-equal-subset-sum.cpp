@@ -1,47 +1,26 @@
 class Solution {
 public:
-    bool backtrack(vector<int>& nums, vector<vector<int>>& dp, int sum, int idx)
+    bool backtrack(vector<int>& nums, int sum, int idx, vector<vector<int>>& dp)
     {
-        if(sum == 0) return true;
-        if(idx < 0) return (sum == 0);
+        if(idx == 0) return nums[0] == sum;
+        if(idx < 0) return false;
         if(dp[idx][sum] != -1) return dp[idx][sum];
 
-        bool exclusion = backtrack(nums, dp, sum, idx-1);
-        bool inclusion = false;
-        if(nums[idx] <= sum)
-            inclusion = backtrack(nums, dp, sum-nums[idx], idx-1);
+        int exclusion = backtrack(nums, sum, idx-1, dp);
+        int inclusion = false;
+        if(sum >= nums[idx])
+            inclusion = backtrack(nums, sum-nums[idx], idx-1, dp);
         
-        return dp[idx][sum] = (inclusion || exclusion);
+        return dp[idx][sum] = inclusion || exclusion;
     }
-    bool canPartition(vector<int>& nums)
+    bool canPartition(vector<int>& nums) 
     {
-        int total = 0, n = nums.size();
+        int sum = 0;
+        for(auto it:nums )    sum += it;
+        if(sum&1) return false;
 
-        for(auto it:nums ) total += it;
-        if(total%2 != 0) return false;
-
-        int reqSum = total/2;
-
-        vector<bool> prev(reqSum+1, false);
-        vector<bool> temp(reqSum+1, false);
-        prev[0] = true;
-
-        if(nums[0] <= reqSum) prev[nums[0]] = true;
-
-        for(int i=1; i<n; i++)
-        {
-            for(int sum=0; sum<=reqSum; sum++)
-            {
-                bool exclusion = prev[sum];
-                bool inclusion = false;
-                if(nums[i] <= sum)
-                    inclusion = prev[sum-nums[i]];
-
-                temp[sum] = (inclusion || exclusion);
-            }
-            prev = temp;
-        }
-
-        return prev.back();
+        int target = sum/2;
+        vector<vector<int>> dp(nums.size(), vector<int>(target+1, -1));
+        return backtrack(nums, target, nums.size()-1, dp);
     }
 };
